@@ -51,6 +51,7 @@ jobs:
           path: allure-report
 
       - name: Deploy Allure Report to GitHub Pages
+        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
