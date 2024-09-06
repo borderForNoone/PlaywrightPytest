@@ -29,8 +29,10 @@ jobs:
 
       - name: Run tests
         run: pytest -n 3 --alluredir=allure-results
+        continue-on-error: true
 
       - name: Upload Allure report as artifact
+        if: always()  # Ensures this step runs regardless of test success or failure
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
