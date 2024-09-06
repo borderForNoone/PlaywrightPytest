@@ -31,8 +31,32 @@ jobs:
         run: pytest -n 3 --alluredir=allure-results
 
       - name: Upload Allure report as artifact
-        if: always()  # Ensures this step runs regardless of test success or failure
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v2
         with:
           name: allure-report
-          path: allure-results
+          path: allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Set up git
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # Check out the gh-pages branch
+          git fetch origin gh-pages || git checkout --orphan gh-pages
+          git worktree add gh-pages gh-pages
+          cd gh-pages
+          
+          # Clear the gh-pages branch content
+          rm -rf ./*
+          
+          # Copy the Allure report to the gh-pages branch
+          cp -R ../allure-report/* .
+          
+          # Commit and push the report to the gh-pages branch
+          git add .
+          git commit -m "Update Allure report"
+          git push origin gh-pages
