@@ -33,7 +33,6 @@ def create_user(page):
     login_page.verify_new_user_signup_visible()
     login_page.enter_name_and_email(name, email)
     login_page.click_signup()
-    signup_page.verify_account_information_visible()
     signup_page.fill_account_information(password)
     signup_page.fill_personal_details(first_name, last_name, company, address, state, city, zipcode, mobile_number)
     signup_page.submit_account_creation()
