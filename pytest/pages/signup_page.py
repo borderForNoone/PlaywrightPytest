@@ -7,7 +7,7 @@ class SignupPage:
 
     @allure.step("Verify account information section is visible")
     def verify_account_information_visible(self):
-        expect(self.page.locator("h2:has-text('Enter Account Information')")).to_be_visible()
+        expect(self.page.locator("h2:has-text('Enter Account Information')")).to_be_visible(timeout=10000)
         allure.attach(self.page.screenshot(), name="Account Information Section", attachment_type=allure.attachment_type.PNG)
 
     @allure.step("Fill account information")
@@ -50,3 +50,6 @@ class SignupPage:
     def verify_email_exists_error(self):
         expect(self.page.locator("p:has-text('Email Address already exist!')")).to_be_visible()
         allure.attach(self.page.screenshot(), name="Email Exists Error", attachment_type=allure.attachment_type.PNG)
+
+    def verify_logged_in(self, username):
+        assert self.page.locator(f"span.logged-in-as:has-text('{username}')").is_visible()

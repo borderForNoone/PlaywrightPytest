@@ -12,6 +12,8 @@ class ProductPage:
         self.search_input_locator = "input[id='search_product']"
         self.search_button_locator = "button#submit_search"
         self.searched_products_header_locator = "h2:has-text('Searched Products')"
+        self.continue_shopping_button_locator = ".btn-success"
+        self.view_cart_button_locator = "a[href='/view_cart'] u"
 
     @allure.step("Click on 'Products' button")
     def click_products_button(self):
@@ -47,6 +49,17 @@ class ProductPage:
         product_name = self.page.locator(".productinfo p").first.text_content()
         return product_name, product_price
 
+    @allure.step("Get details of the second product")
+    def get_second_product_details(self):
+        # Locator for the second product
+        product_locator = ".col-sm-4:nth-of-type(3)"
+        
+        # Get product name and price for the second product
+        product_name = self.page.locator(f"{product_locator} .productinfo p").text_content()
+        product_price = self.page.locator(f"{product_locator} .productinfo h2").text_content()
+        
+        return product_name, product_price
+
     @allure.step("Search for a product")
     def search_product(self, search_term):
         self.page.fill(self.search_input_locator, search_term)
@@ -64,3 +77,28 @@ class ProductPage:
             product = search_results.nth(i)
             expect(product.locator("p")).to_contain_text(search_term)
         allure.attach(self.page.screenshot(), name="Searched Products Verified", attachment_type=allure.attachment_type.PNG)
+
+    def hover_over_and_add_to_cart(self, product_index: int):
+        product_locator = f"[data-product-id='{product_index}']"
+        self.page.hover(product_locator)
+        self.page.click(product_locator)
+
+    def click_continue_shopping(self):
+        self.page.click(self.continue_shopping_button_locator)
+
+    @allure.step("Click 'View Cart' button")
+    def click_view_cart_button(self):
+        # Attempt to click the button with force option
+        self.page.click(self.view_cart_button_locator)
+        allure.attach(self.page.screenshot(), name="View Cart Button Clicked", attachment_type=allure.attachment_type.PNG)
+
+    def set_quantity(self, quantity):
+        quantity_input = self.page.locator('input[name="quantity"]')
+        quantity_input.fill(str(quantity))
+
+    def click_add_to_cart(self):
+        self.page.locator('button.cart').click()
+
+    def product_details_visible(self):
+        assert self.page.locator('.product-information h2').is_visible(), "Product title is not visible"
+

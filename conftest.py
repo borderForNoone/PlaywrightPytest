@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 def playwright_context():
     # Launch browser and create context once for the session
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True)
+        browser = playwright.chromium.launch(headless=False)
         context = browser.new_context()
         yield context
         # Close the context after the session ends

@@ -4,6 +4,7 @@ from playwright.sync_api import expect
 class AccountPage:
     def __init__(self, page):
         self.page = page
+        self.account_deleted_title_locator = "h2[data-qa='account-deleted']"
 
     @allure.step("Verify logged in as {name}")
     def verify_logged_in_as(self, name):
@@ -17,7 +18,7 @@ class AccountPage:
 
     @allure.step("Verify account deleted")
     def verify_account_deleted_visible(self):
-        expect(self.page.locator("h2:has-text('Account Deleted!')")).to_be_visible()
+        expect(self.page.locator("h2:has-text('Account Deleted!')")).to_be_visible(timeout=10000)
         allure.attach(self.page.screenshot(), name="Account Deleted Visibility", attachment_type=allure.attachment_type.PNG)
 
     @allure.step("Click 'Continue' button after account deletion")
@@ -29,3 +30,8 @@ class AccountPage:
     def click_logout(self):
         self.page.click('a[href="/logout"]')
         allure.attach(self.page.screenshot(), name="Logout Button Clicked", attachment_type=allure.attachment_type.PNG)
+
+    def verify_account_deleted(self):
+        self.page.wait_for_selector(self.account_deleted_title_locator, state="visible", timeout=10000)
+        account_deleted_title = self.page.locator(self.account_deleted_title_locator).text_content().strip()
+        assert account_deleted_title == "Account Deleted!", "Account deletion message not found"

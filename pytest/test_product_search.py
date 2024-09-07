@@ -18,7 +18,7 @@ def test_search_product(page):
     home_page.verify_homepage_visible()
 
     # 4. Click on 'Products' button
-    product_page.click_products_button()
+    home_page.click_products_button()
 
     # 5. Verify user is navigated to ALL PRODUCTS page successfully
     product_page.verify_all_products_page_visible()

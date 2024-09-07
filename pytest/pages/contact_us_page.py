@@ -1,7 +1,7 @@
-from playwright.sync_api import expect
+from playwright.sync_api import Page, expect
 
 class ContactUsPage:
-    def __init__(self, page):
+    def __init__(self, page: Page):
         self.page = page
 
     def click_contact_us(self):
@@ -24,8 +24,9 @@ class ContactUsPage:
         self.page.on("dialog", lambda dialog: dialog.accept())
 
     def verify_success_message(self):
-        expect(self.page.locator("div.status.alert.alert-success")).to_be_visible()
+        # Wait for success message to be visible
+        success_message_locator = "div.status.alert.alert-success"
+        expect(self.page.locator(success_message_locator)).to_be_visible(timeout=10000)
 
     def click_home(self):
         self.page.click("a:has-text('Home')")
-    

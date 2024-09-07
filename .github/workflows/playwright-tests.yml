@@ -31,7 +31,7 @@ jobs:
         run: npm install -g allure-commandline --save-dev
 
       - name: Run tests
-        run: pytest -n 3 --alluredir=allure-results
+        run: pytest -n 6 --alluredir=allure-results
 
       - name: Generate Allure report
         if: always()
